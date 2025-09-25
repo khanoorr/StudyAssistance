@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     const studyForm = document.getElementById('study-form');
     const topicInput = document.getElementById('topic');
@@ -7,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const contentDisplay = document.getElementById('content-display');
 
     const CEREBRAS_API_KEY = 'csk-5339684ne4r8epnrjwd84p65e65c8rty6etj9e926n5nkttx';
-    const API_URL = 'https://api.cerebras.com/v1/chat/completions';
+    // Using a CORS proxy to bypass browser security restrictions for this demo
+    const API_URL = 'https://cors-anywhere.herokuapp.com/https://api.cerebras.com/v1/chat/completions';
 
     studyForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -45,13 +45,20 @@ document.addEventListener('DOMContentLoaded', () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${CEREBRAS_API_KEY}`
+                'Authorization': `Bearer ${CEREBRAS_API_KEY}`,
+                'X-Requested-With': 'XMLHttpRequest' // Required by some CORS proxies
             },
             body: JSON.stringify(requestBody)
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                return response.text().then(text => { 
+                    // The cors-anywhere proxy might show a welcome page on first use.
+                    if (response.status === 503 && text.includes('request temporary access')) {
+                        throw new Error('CORS proxy requires activation. Please visit the proxy URL in a new tab and click the button to activate it.');
+                    }
+                    throw new Error(`Network response was not ok: ${response.status} ${response.statusText} - ${text}`); 
+                });
             }
             return response.json();
         })
