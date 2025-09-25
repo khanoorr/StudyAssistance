@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Learnship - AI Learning Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+</head>
+<body>
+    <!-- Status bar for mobile app look -->
+    <div class="status-bar">
+        <div class="status-bar-time" id="status-bar-time">9:02 AM</div>
+        <div class="status-bar-icons">
+            <span>📶</span>
+            <span>🔋</span>
+        </div>
+    </div>
+    
+    <!-- App header -->
+    <header class="app-header">
+        <h1>Learnship</h1>
+        <p>AI Learning Assistant</p>
+    </header>
+    
+    <!-- Main content area -->
+    <main class="main-content">
+        <div class="content-container">
+            <!-- Input section -->
+            <div class="input-section">
+                <form id="study-form">
+                    <div class="form-group">
+                        <label for="topic">Enter a topic to study:</label>
+                        <input type="text" id="topic" name="topic" required placeholder="e.g., Mitochondria, Photosynthesis, World War II...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Choose output format:</label>
+                        <div class="radio-group">
+                            <input type="radio" id="summary" name="content_type" value="Summary Notes" required>
+                            <label for="summary">Summary Notes</label>
+                            
+                            <input type="radio" id="flashcards" name="content_type" value="Flashcards">
+                            <label for="flashcards">Flashcards</label>
+                            
+                            <input type="radio" id="quiz" name="content_type" value="Quiz">
+                            <label for="quiz">Quiz</label>
+                            
+                            <input type="radio" id="roadmap" name="content_type" value="Roadmap">
+                            <label for="roadmap">Roadmap</label>
+                            
+                            <input type="radio" id="study-material" name="content_type" value="Study Material">
+                            <label for="study-material">Study Material & Videos</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" id="generate-btn">Generate Study Materials</button>
+                </form>
+                
+                <div id="loading" class="hidden">
+                    <p>Generating your study materials...</p>
+                </div>
+            </div>
+            
+            <!-- Output section -->
+            <div class="output-section">
+                <div id="content-display" class="content-display hidden">
+                    <!-- Generated content will appear here -->
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Content type navigation bar -->
+    <nav class="content-nav hidden" id="content-nav">
+        <div class="nav-item" data-content="summary-notes">
+            <span class="nav-label">Summary Notes</span>
+        </div>
+        <div class="nav-item" data-content="flashcards">
+            <span class="nav-label">Flashcards</span>
+        </div>
+        <div class="nav-item" data-content="quiz">
+            <span class="nav-label">Quiz</span>
+        </div>
+        <div class="nav-item" data-content="roadmap">
+            <span class="nav-label">Roadmap</span>
+        </div>
+        <div class="nav-item" data-content="study-material">
+            <span class="nav-label">Study Material</span>
+        </div>
+    </nav>
+    
+    <!-- Bottom navigation bar -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" data-tab="home">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
+        </div>
+        <div class="nav-item" data-tab="favorites">
+            <span class="nav-icon">⭐</span>
+            <span class="nav-label">Favorites</span>
+        </div>
+        <div class="nav-item" data-tab="history">
+            <span class="nav-icon">🕒</span>
+            <span class="nav-label">History</span>
+        </div>
+        <div class="nav-item" data-tab="settings">
+            <span class="nav-icon">⚙️</span>
+            <span class="nav-label">Settings</span>
+        </div>
+    </nav>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        // Update status bar time
+        function updateStatusBarTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('status-bar-time').textContent = timeString;
+        }
+        
+        // Update time immediately and then every minute
+        updateStatusBarTime();
+        setInterval(updateStatusBarTime, 60000);
+        
+        // Bottom navigation functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                document.querySelectorAll('.nav-item').forEach(navItem => {
+                    navItem.classList.remove('active');
+                });
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+                
+                // Handle tab switching (this would be expanded in a full app)
+                const tab = this.getAttribute('data-tab');
+                console.log(`Switched to ${tab} tab`);
+            });
+        });
+    </script>
+</body>
+</html>
