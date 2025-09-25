@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let lastGeneratedData = null;
 
-    // --- Content Type Selection ---
     contentTypes.forEach(ct => {
         ct.addEventListener('click', () => {
             contentTypes.forEach(c => c.classList.remove('selected'));
@@ -22,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Form Submission ---
     studyForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const topic = topicInput.value;
@@ -37,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
         generateContent(requestData);
     });
 
-    // --- API Call ---
     const generateContent = (requestData) => {
         loading.classList.remove('hidden');
         outputSection.classList.add('hidden');
@@ -59,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayOutput(data.content, requestData.content_type);
         })
         .catch(error => {
-            contentDisplay.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+            contentDisplay.innerHTML = `<p class="text-danger">Error: ${error.message}</p>`;
             outputTitle.textContent = 'Error';
             outputSection.classList.remove('hidden');
         })
@@ -69,14 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // --- Display Output ---
     const displayOutput = (content, contentType) => {
         outputTitle.textContent = `${contentType} for "${lastGeneratedData.topic}"`;
-        contentDisplay.innerHTML = content; // Assuming the content is pre-formatted HTML
+        contentDisplay.innerHTML = content;
         outputSection.classList.remove('hidden');
     };
 
-    // --- Output Actions ---
     copyBtn.addEventListener('click', () => {
         const textToCopy = contentDisplay.innerText;
         navigator.clipboard.writeText(textToCopy)
